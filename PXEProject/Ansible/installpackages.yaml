@@ -1,0 +1,21 @@
+- name: Install apps
+  hosts: PXEAutomation
+  become: yes
+  become_user: root
+  become_method: su
+
+  tasks:
+    - name: Install tools
+      apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - htop
+        - wget
+        - tree
+        - git
+        - nodejs
+        - nginx
+        - cowsay
+        - sudo
+        - python3

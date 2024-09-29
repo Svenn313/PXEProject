@@ -1,0 +1,4 @@
+DEFAULT LINUX
+LABEL LINUX
+kernel debian-installer/amd64/linux
+append vga=normal initrd=debian-installer/amd64/initrd.gz interface=auto auto=true priority=critical preseed/url=http://192.168.1.24:8080/preseed.cfg --

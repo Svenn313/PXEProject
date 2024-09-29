@@ -1,0 +1,24 @@
+- name: SSH configuration
+  hosts: PXEAutomation
+  become: yes
+  become_user: root
+  become_method: su
+
+  tasks:
+    - name: Password Authentication No
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: ^(# *)?PasswordAuthentication
+        line: PasswordAuthentication no
+
+    - name: Permit Empty Passwords
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: ^(# *)?PermitEmptyPasswords
+        line: PermitEmptyPasswords no
+
+    - name: PermitRootLogin
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: ^(# *)?PermitRootLogin
+        line: PermitRootLogin no

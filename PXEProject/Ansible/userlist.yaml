@@ -1,0 +1,19 @@
+- users:
+  - name: "sven"
+    job: "asys"
+
+   - name: "guigui"
+    job: "developer"
+
+   - name: "clm"
+    job: "developer"
+
+   - name: "discodino"
+    job: "asys"
+
+   - name: "wilkon"
+    job: "HR"
+
+   - name: "mar1"
+    job: "HR"
+   

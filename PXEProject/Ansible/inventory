@@ -1,0 +1,8 @@
+[PXEAutomation]
+192.168.1.140
+192.168.1.163
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=user1
+ansible_ssh_pass=user1
