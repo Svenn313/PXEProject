@@ -1,23 +1,49 @@
-- name: Create User
-  hosts: PXEAutomation
+- name: Création d'un utilisateur avec clef ssh et ajout a sudo
+  hosts: Laptops
   become: yes
-  become_user: root
-  become_method: su
 
-  - name: Create Users & Groups
-  hosts: target1
-  gather_facts: false
-  vars_files: userlist
   tasks:
-    - name: Create groups
-      group:
-        name: "{{ admin_group }}"
-        state: present
-
-    - name: Create Users Task
-      user:
-        name: "{{ item }}"
-        state: present
-        password: "{{ default_user_password | password_hash('sha512','A512') }}"
+    - name: Création de l'utilisateur
+      ansible.builtin.user:
+        name: "{{ username }}"
         shell: /bin/bash
-        group: "{{ admin_group }}"
+        state: present
+        create_home: yes
+
+    - name: Ajout de l'utilisateur au groupe sudo
+      ansible.builtin.user:
+        name: "{{ username }}"
+        groups: sudo
+        append: yes
+
+    - name: S'assurer que le groupe sudo a les privilèges sudo sans mot de passe
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers
+        regexp: '^%sudo'
+        line: '%sudo ALL=(ALL:ALL) NOPASSWD:ALL'
+        validate: 'visudo -cf %s'
+
+    - name: Créer le répertoire .ssh si nécessaire
+      ansible.builtin.file:
+        path: "/home/{{ username }}/.ssh"
+        state: directory
+        owner: "{{ username }}"
+        mode: '0700'
+
+    - name: Copier le fichier authorized_keys
+      ansible.builtin.copy:
+        src: ./authorized_keys   # Chemin du fichier sur votre machine de contrôle
+        dest: "/home/{{ username }}/.ssh/authorized_keys"
+        owner: "{{ username }}"
+        mode: '0600'
+
+    - name: Installation des packages pour laptops
+      apt:
+        name:
+          - stow
+          - tar
+          - perl
+          - zsh
+          - dstat
+        state: latest
+        cache_valid_time: 3600

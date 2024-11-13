@@ -1,15 +1,10 @@
-- name: Install apps
-  hosts: PXEAutomation
+- name: Install generic apps
+  hosts: all
   become: yes
-  become_user: root
-  become_method: su
-
-  tasks:
-    - name: Install tools
-      apt:
-        name: "{{ item }}"
-        state: latest
-      loop:
+  tasks: 
+  - name: Installation des packages 
+    apt:
+      name:
         - htop
         - wget
         - tree
@@ -17,5 +12,35 @@
         - nodejs
         - nginx
         - cowsay
-        - sudo
         - python3
+        - openssh-server
+        - ansible
+      state: latest
+      cache_valid_time: 3600
+
+- name: Install specific for Servers
+  hosts: Servers
+  become: yes
+  tasks: 
+  - name: Installation des packages pour les serveurs
+    apt:
+      name:
+        - php-common
+        - sysstat
+        - net-tools
+        - lshw
+        - hwinfo
+        - neofetch
+      state: latest
+      cache_valid_time: 3600
+
+- name: Install specific for ServerDevOps
+  hosts: ServerDevOps
+  become: yes
+  tasks: 
+  - name: Installation de cpulimit pour les serveurs DevOps
+    apt:
+      name:
+        - cpulimit
+      state: latest
+      cache_valid_time: 3600
