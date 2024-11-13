@@ -23,6 +23,8 @@ awk '{print tolower($0)}' username.txt | tr " " "." > usernameformat.txt
 ansibleUsername=$(< usernameformat.txt)
 rm username.txt
 
+## Vérification du nombres de machines disponibles sur la plage DHCP attribué pour le PXE ##
+## Si il y a plusieurs machines : on demande a l'utilisateur sur laquel il souhaite installer le compte ##
 fping -gaq 192.168.1.40 192.168.1.49 > ping.txt
 pingtest="ping.txt"
 lineCount=$(wc -l < "$pingtest")
@@ -50,8 +52,8 @@ else
     ansible-playbook -i inventory createuser.yaml -e "username="$ansibleUsername""
 fi
 
-Modification de la BDD
-echo "Ajout de $newSurnameAndName a la base de données"
+## Modification de la BDD ##
+echo "Ajout de $newSurnameAndName à la base de données"
 psql -h localhost -p 5432 -U sven postgres << EOF
 insert into main(name,position,sshkey,contracttype,startdate,enddate)
 values ('$newSurnameAndName','$newPosition','$newSshpubkey','$newContractType' , '$newStartDate', '$newStartDate' );
